@@ -1,20 +1,24 @@
 import Replicate from "replicate";
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
-
 export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
 
+    const replicate = new Replicate({
+      auth: process.env.REPLICATE_API_TOKEN as string,
+    });
+
     const output = await replicate.run(
-      "stability-ai/sdxl:39ed52f2a78e934b",
+      "black-forest-labs/flux-schnell",
       {
         input: {
           prompt: prompt,
-          width: 768,
-          height: 1024
+          go_fast: true,
+          megapixels: "1",
+          num_outputs: 1,
+          aspect_ratio: "3:4",
+          output_format: "jpg",
+          output_quality: 90
         }
       }
     );
@@ -23,10 +27,11 @@ export async function POST(req: Request) {
       success: true,
       image: output[0]
     });
-  } catch (error) {
-    return Response.json(
-      { success: false },
-      { status: 500 }
-    );
+
+  } catch (error: any) {
+    return Response.json({
+      success: false,
+      error: error.message
+    }, { status: 500 });
   }
 }
