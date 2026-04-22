@@ -149,4 +149,3 @@ const goldBtn: React.CSSProperties = {
   fontWeight: "bold",
   cursor: "pointer"
 };
-}
