@@ -2,17 +2,26 @@ import Replicate from "replicate";
 
 export async function POST(req: Request) {
   try {
+    const token = process.env.REPLICATE_API_TOKEN;
+
+    if (!token) {
+      return Response.json({
+        success: false,
+        error: "Missing REPLICATE_API_TOKEN"
+      });
+    }
+
     const { prompt } = await req.json();
 
     const replicate = new Replicate({
-      auth: process.env.REPLICATE_API_TOKEN as string,
+      auth: token
     });
 
     const output = await replicate.run(
       "black-forest-labs/flux-schnell",
       {
         input: {
-          prompt: prompt,
+          prompt,
           go_fast: true,
           megapixels: "1",
           num_outputs: 1,
@@ -31,7 +40,7 @@ export async function POST(req: Request) {
   } catch (error: any) {
     return Response.json({
       success: false,
-      error: error.message
-    }, { status: 500 });
+      error: error.message || "Unknown error"
+    });
   }
 }
