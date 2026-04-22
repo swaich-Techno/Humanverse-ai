@@ -26,7 +26,7 @@ export default function Home() {
         body: JSON.stringify({ prompt })
       });
 
-      // Generate AI image
+      // Generate AI Image
       const res = await fetch("/api/generate-image", {
         method: "POST",
         headers: {
@@ -40,7 +40,7 @@ export default function Home() {
       if (data.success) {
         setImage(data.image);
       } else {
-        alert("Failed to generate image.");
+        alert(data.error || "Failed to generate image.");
       }
     } catch (error) {
       alert("Server error.");
@@ -69,14 +69,19 @@ export default function Home() {
           marginBottom: "60px"
         }}
       >
-        <h2 style={{ fontSize: "28px", fontWeight: "bold" }}>
+        <h2
+          style={{
+            fontSize: "28px",
+            fontWeight: "bold"
+          }}
+        >
           HumanVerse AI
         </h2>
 
         <button style={goldBtn}>Launch Studio</button>
       </nav>
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section
         style={{
           textAlign: "center",
@@ -116,7 +121,7 @@ export default function Home() {
           }}
         >
           <textarea
-            placeholder="Example: realistic punjabi male hero, cinematic lighting, village background"
+            placeholder="Example: ultra realistic handsome Punjabi male hero, cinematic lighting, village background"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             style={{
@@ -151,7 +156,12 @@ export default function Home() {
         {/* Output Image */}
         {image && (
           <div style={{ marginTop: "40px" }}>
-            <h2 style={{ marginBottom: "20px", fontSize: "28px" }}>
+            <h2
+              style={{
+                marginBottom: "20px",
+                fontSize: "28px"
+              }}
+            >
               Generated Character
             </h2>
 
