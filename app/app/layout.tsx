@@ -1,15 +1,18 @@
 export const metadata = {
-  title: "Humanverse AI"
-}
+  title: "HumanVerse AI",
+  description: "Create AI Characters and Videos"
+};
 
-export default function Rootlayout({
+export default function RootLayout({
   children,
-} : {
-  Children: React.ReactNode
+}: {
+  children: React.ReactNode;
 }) {
   return (
-    <html>
-    <body>(children)</body>
+    <html lang="en">
+      <body style={{ margin: 0 }}>
+        {children}
+      </body>
     </html>
-    )
+  );
 }
