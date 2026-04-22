@@ -1,4 +1,14 @@
+"use client";
+
+import { useState } from "react";
+
 export default function Home() {
+  const [prompt, setPrompt] = useState("");
+
+  const handleGenerate = () => {
+    alert("AI Generation Coming Next Step:\n\n" + prompt);
+  };
+
   return (
     <main
       style={{
@@ -7,80 +17,93 @@ export default function Home() {
           "radial-gradient(circle at top, #1a1a1a 0%, #000000 55%, #000000 100%)",
         color: "white",
         fontFamily: "Arial, sans-serif",
-        display: "flex",
-        flexDirection: "column",
+        padding: "30px",
       }}
     >
       {/* Navbar */}
       <nav
         style={{
-          padding: "24px 50px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginBottom: "60px",
         }}
       >
         <h2 style={{ fontSize: "28px", fontWeight: "bold" }}>
           HumanVerse AI
         </h2>
 
-        <div style={{ display: "flex", gap: "16px" }}>
-          <button style={navBtn}>Login</button>
-          <button style={goldBtn}>Start Free</button>
-        </div>
+        <button style={goldBtn}>Launch Studio</button>
       </nav>
 
       {/* Hero */}
       <section
         style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
           textAlign: "center",
-          padding: "20px",
+          maxWidth: "900px",
+          margin: "0 auto",
         }}
       >
-        <p
-          style={{
-            color: "#b68cff",
-            marginBottom: "12px",
-            fontWeight: "bold",
-            letterSpacing: "2px",
-          }}
-        >
-          NEXT GEN AI VIDEO CREATOR
-        </p>
-
         <h1
           style={{
-            fontSize: "72px",
-            maxWidth: "1000px",
+            fontSize: "64px",
             lineHeight: "1.1",
             marginBottom: "20px",
           }}
         >
-          Create Real Humans.
+          Turn Prompts Into
           <br />
-          Turn Prompts Into Videos.
+          Real Human Videos
         </h1>
 
         <p
           style={{
-            color: "#aaa",
+            color: "#999",
             fontSize: "22px",
-            maxWidth: "700px",
             marginBottom: "35px",
           }}
         >
-          Generate lifelike characters, cinematic stories and reusable AI
-          actors in minutes.
+          Create AI characters, cinematic stories, and reusable actors.
         </p>
 
-        <div style={{ display: "flex", gap: "18px", flexWrap: "wrap" }}>
-          <button style={goldBtn}>Launch Studio</button>
-          <button style={navBtn}>Watch Demo</button>
+        {/* Prompt Box */}
+        <div
+          style={{
+            background: "#111",
+            border: "1px solid #222",
+            padding: "20px",
+            borderRadius: "20px",
+            marginTop: "30px",
+          }}
+        >
+          <textarea
+            placeholder="Describe your character and video idea..."
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            style={{
+              width: "100%",
+              minHeight: "150px",
+              background: "#000",
+              color: "white",
+              border: "1px solid #333",
+              borderRadius: "14px",
+              padding: "18px",
+              fontSize: "18px",
+              outline: "none",
+            }}
+          />
+
+          <button
+            onClick={handleGenerate}
+            style={{
+              ...goldBtn,
+              marginTop: "18px",
+              width: "100%",
+              fontSize: "18px",
+            }}
+          >
+            Generate Character + Video
+          </button>
         </div>
       </section>
     </main>
@@ -94,14 +117,5 @@ const goldBtn = {
   padding: "14px 28px",
   borderRadius: "14px",
   fontWeight: "bold",
-  cursor: "pointer",
-};
-
-const navBtn = {
-  background: "transparent",
-  color: "#fff",
-  border: "1px solid #333",
-  padding: "14px 28px",
-  borderRadius: "14px",
   cursor: "pointer",
 };
