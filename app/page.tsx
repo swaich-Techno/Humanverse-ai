@@ -4,6 +4,8 @@ import { useState } from "react";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState("");
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -12,7 +14,20 @@ export default function Home() {
     }
 
     try {
-      const res = await fetch("/api/save-prompt", {
+      setLoading(true);
+      setImage("");
+
+      // Save prompt to MongoDB
+      await fetch("/api/save-prompt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt })
+      });
+
+      // Generate AI image
+      const res = await fetch("/api/generate-image", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -23,13 +38,14 @@ export default function Home() {
       const data = await res.json();
 
       if (data.success) {
-        alert("Prompt saved to MongoDB!");
-        setPrompt("");
+        setImage(data.image);
       } else {
-        alert("Something went wrong.");
+        alert("Failed to generate image.");
       }
     } catch (error) {
       alert("Server error.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,23 +69,18 @@ export default function Home() {
           marginBottom: "60px"
         }}
       >
-        <h2
-          style={{
-            fontSize: "28px",
-            fontWeight: "bold"
-          }}
-        >
+        <h2 style={{ fontSize: "28px", fontWeight: "bold" }}>
           HumanVerse AI
         </h2>
 
         <button style={goldBtn}>Launch Studio</button>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero */}
       <section
         style={{
           textAlign: "center",
-          maxWidth: "900px",
+          maxWidth: "950px",
           margin: "0 auto"
         }}
       >
@@ -82,7 +93,7 @@ export default function Home() {
         >
           Turn Prompts Into
           <br />
-          Real Human Videos
+          Real Human Characters
         </h1>
 
         <p
@@ -92,7 +103,7 @@ export default function Home() {
             marginBottom: "35px"
           }}
         >
-          Create AI characters, cinematic stories, and reusable actors.
+          Create realistic AI humans for videos, stories and branding.
         </p>
 
         {/* Prompt Box */}
@@ -100,13 +111,12 @@ export default function Home() {
           style={{
             background: "#111",
             border: "1px solid #222",
-            padding: "20px",
-            borderRadius: "20px",
-            marginTop: "30px"
+            padding: "22px",
+            borderRadius: "20px"
           }}
         >
           <textarea
-            placeholder="Describe your character and video idea..."
+            placeholder="Example: realistic punjabi male hero, cinematic lighting, village background"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             style={{
@@ -125,16 +135,39 @@ export default function Home() {
 
           <button
             onClick={handleGenerate}
+            disabled={loading}
             style={{
               ...goldBtn,
-              marginTop: "18px",
               width: "100%",
-              fontSize: "18px"
+              marginTop: "18px",
+              fontSize: "18px",
+              opacity: loading ? 0.7 : 1
             }}
           >
-            Generate Character + Video
+            {loading ? "Generating..." : "Generate Character"}
           </button>
         </div>
+
+        {/* Output Image */}
+        {image && (
+          <div style={{ marginTop: "40px" }}>
+            <h2 style={{ marginBottom: "20px", fontSize: "28px" }}>
+              Generated Character
+            </h2>
+
+            <img
+              src={image}
+              alt="AI Character"
+              style={{
+                width: "100%",
+                maxWidth: "520px",
+                borderRadius: "18px",
+                border: "1px solid #333",
+                boxShadow: "0 0 30px rgba(255,255,255,0.08)"
+              }}
+            />
+          </div>
+        )}
       </section>
     </main>
   );
