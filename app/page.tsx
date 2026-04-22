@@ -5,8 +5,32 @@ import { useState } from "react";
 export default function Home() {
   const [prompt, setPrompt] = useState("");
 
-  const handleGenerate = () => {
-    alert("AI Generation Coming Next Step:\n\n" + prompt);
+  const handleGenerate = async () => {
+    if (!prompt.trim()) {
+      alert("Please enter a prompt.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/save-prompt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Prompt saved to MongoDB!");
+        setPrompt("");
+      } else {
+        alert("Something went wrong.");
+      }
+    } catch (error) {
+      alert("Server error.");
+    }
   };
 
   return (
@@ -17,7 +41,7 @@ export default function Home() {
           "radial-gradient(circle at top, #1a1a1a 0%, #000000 55%, #000000 100%)",
         color: "white",
         fontFamily: "Arial, sans-serif",
-        padding: "30px",
+        padding: "30px"
       }}
     >
       {/* Navbar */}
@@ -26,29 +50,34 @@ export default function Home() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "60px",
+          marginBottom: "60px"
         }}
       >
-        <h2 style={{ fontSize: "28px", fontWeight: "bold" }}>
+        <h2
+          style={{
+            fontSize: "28px",
+            fontWeight: "bold"
+          }}
+        >
           HumanVerse AI
         </h2>
 
         <button style={goldBtn}>Launch Studio</button>
       </nav>
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section
         style={{
           textAlign: "center",
           maxWidth: "900px",
-          margin: "0 auto",
+          margin: "0 auto"
         }}
       >
         <h1
           style={{
             fontSize: "64px",
             lineHeight: "1.1",
-            marginBottom: "20px",
+            marginBottom: "20px"
           }}
         >
           Turn Prompts Into
@@ -60,7 +89,7 @@ export default function Home() {
           style={{
             color: "#999",
             fontSize: "22px",
-            marginBottom: "35px",
+            marginBottom: "35px"
           }}
         >
           Create AI characters, cinematic stories, and reusable actors.
@@ -73,7 +102,7 @@ export default function Home() {
             border: "1px solid #222",
             padding: "20px",
             borderRadius: "20px",
-            marginTop: "30px",
+            marginTop: "30px"
           }}
         >
           <textarea
@@ -82,7 +111,7 @@ export default function Home() {
             onChange={(e) => setPrompt(e.target.value)}
             style={{
               width: "100%",
-              minHeight: "150px",
+              minHeight: "160px",
               background: "#000",
               color: "white",
               border: "1px solid #333",
@@ -90,6 +119,7 @@ export default function Home() {
               padding: "18px",
               fontSize: "18px",
               outline: "none",
+              resize: "vertical"
             }}
           />
 
@@ -99,7 +129,7 @@ export default function Home() {
               ...goldBtn,
               marginTop: "18px",
               width: "100%",
-              fontSize: "18px",
+              fontSize: "18px"
             }}
           >
             Generate Character + Video
@@ -110,12 +140,13 @@ export default function Home() {
   );
 }
 
-const goldBtn = {
+const goldBtn: React.CSSProperties = {
   background: "linear-gradient(90deg,#d4af37,#f5d76e)",
   color: "#000",
   border: "none",
   padding: "14px 28px",
   borderRadius: "14px",
   fontWeight: "bold",
-  cursor: "pointer",
+  cursor: "pointer"
 };
+}
